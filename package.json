@@ -21,7 +21,8 @@
     "react-router-dom": "^6.23.1",
     "styled-components": "^6.1.11",
     "uuid": "^10.0.0",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.22",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

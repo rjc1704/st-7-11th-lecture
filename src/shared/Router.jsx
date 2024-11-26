@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import {
   BrowserRouter,
   Navigate,
@@ -8,13 +7,15 @@ import {
 } from "react-router-dom";
 import Login from "../pages/Login";
 import Main from "../pages/Main";
+import useAuthStore from "../zustand/useAuthStore";
+import Profile from "../pages/Profile";
 
 const PublicRoute = () => {
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const isLogin = useAuthStore((state) => state.isLogin);
   return <>{isLogin ? <Navigate to="/" /> : <Outlet />}</>;
 };
 const PrivateRoute = () => {
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const isLogin = useAuthStore((state) => state.isLogin);
   return <>{isLogin ? <Outlet /> : <Navigate to="/login" />}</>;
 };
 
@@ -27,6 +28,7 @@ export default function Router() {
         </Route>
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Main />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>

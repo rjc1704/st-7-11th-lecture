@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
 import { jsonApi } from "../api/axios.js";
 
 export default function TodoItem({ todo }) {
-  const dispatch = useDispatch();
-
   const queryClient = useQueryClient();
   const toggleMutation = useMutation({
     mutationFn: async (id) => {

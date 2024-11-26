@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
 import { jsonApi } from "../api/axios";
 import TodoForm from "../components/TodoForm";
 import TodoList from "../components/TodoList";
-import { logout } from "../redux/slices/authSlice";
+import useAuthStore from "../zustand/useAuthStore";
+import { Link } from "react-router-dom";
 
 export default function Main() {
-  const dispatch = useDispatch();
+  const logout = useAuthStore((state) => state.logout);
 
   const { data: todos, isPending } = useQuery({
     queryKey: ["todos"],
@@ -21,7 +21,10 @@ export default function Main() {
   return (
     <>
       <h1>회원제 투두리스트</h1>
-      <button onClick={() => dispatch(logout())}>로그아웃</button>
+      <div>
+        <Link to="/profile">내 프로필</Link>
+      </div>
+      <button onClick={() => logout()}>로그아웃</button>
       <TodoForm />
       <TodoList isDone={false} todos={todos} />
       <TodoList isDone={true} todos={todos} />

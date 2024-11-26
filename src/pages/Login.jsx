@@ -1,35 +1,30 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { authApi } from "../api/axios";
 import useForm from "../hooks/useForm";
-import { login } from "../redux/slices/authSlice";
+import { validateForm } from "../utils/validation";
+import { registerApi } from "../api/auth";
+import useAuthStore from "../zustand/useAuthStore";
 
 export default function Login() {
-  const dispatch = useDispatch();
+  const login = useAuthStore((state) => state.login);
   const [isLoginMode, setIsLoginMode] = useState(true);
 
-  const { formState, onChangeHandler, resetForm } = useForm({
-    id: "",
-    password: "",
-    nickname: "",
-  });
-  const { id, password, nickname } = formState;
+  const { formStates, formErrors, onChangeHandler, resetForm } = useForm(
+    {
+      id: "",
+      password: "",
+      nickname: "",
+    },
+    validateForm,
+  );
+  const { id, password, nickname } = formStates;
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     if (isLoginMode) {
       try {
-        const { data } = await authApi.post("/login", {
-          id,
-          password,
-        });
-        const { accessToken, avatar, nickname, userId } = data;
-        if (data.success) {
-          alert("로그인 성공");
-          localStorage.setItem("accessToken", accessToken);
-          dispatch(login());
-        }
+        await login({ id, password });
+        alert("로그인 성공");
       } catch (err) {
         alert(err?.response?.data?.message);
         console.error(err);
@@ -37,7 +32,7 @@ export default function Login() {
     } else {
       // 회원가입 처리
       try {
-        const { data } = await authApi.post("/register", {
+        const data = await registerApi({
           id,
           password,
           nickname,
@@ -65,6 +60,7 @@ export default function Login() {
           minLength={4}
           maxLength={10}
         />
+        {formErrors.id && <ErrorMessage>{formErrors.id}</ErrorMessage>}
         <Input
           name="password"
           type="password"
@@ -74,15 +70,23 @@ export default function Login() {
           minLength={4}
           maxLength={15}
         />
+        {formErrors.password && (
+          <ErrorMessage>{formErrors.password}</ErrorMessage>
+        )}
         {!isLoginMode && (
-          <Input
-            name="nickname"
-            value={nickname}
-            onChange={onChangeHandler}
-            placeholder="닉네임 (1~10글자)"
-            minLength={1}
-            maxLength={10}
-          />
+          <>
+            <Input
+              name="nickname"
+              value={nickname}
+              onChange={onChangeHandler}
+              placeholder="닉네임 (1~10글자)"
+              minLength={1}
+              maxLength={10}
+            />
+            {formErrors.nickname && (
+              <ErrorMessage>{formErrors.nickname}</ErrorMessage>
+            )}
+          </>
         )}
         <button>{isLoginMode ? "로그인" : "회원가입"}</button>
         <ToggleText>
@@ -137,4 +141,9 @@ const ToggleText = styled.div`
       color: black;
     }
   }
+`;
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
 `;

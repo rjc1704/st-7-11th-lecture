@@ -1,6 +1,5 @@
 import axios from "axios";
-import { logout } from "../redux/slices/authSlice";
-import store from "../redux/config/configStore";
+import useAuthStore from "../zustand/useAuthStore";
 
 export const authApi = axios.create({
   baseURL: "https://moneyfulpublicpolicy.co.kr",
@@ -32,7 +31,8 @@ authApi.interceptors.response.use(
       "토큰이 만료되었습니다. 다시 로그인 해주세요."
     ) {
       // 로그아웃처리
-      return store.dispatch(logout());
+      // return store.dispatch(logout());
+      return useAuthStore.getState().logout();
     }
     return Promise.reject(err);
   },
