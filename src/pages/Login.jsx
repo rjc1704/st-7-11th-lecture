@@ -79,8 +79,8 @@ export default function Login() {
               name="nickname"
               value={nickname}
               onChange={onChangeHandler}
-              placeholder="닉네임 (1~10글자)"
-              minLength={1}
+              placeholder="닉네임 (2~10글자)"
+              minLength={2}
               maxLength={10}
             />
             {formErrors.nickname && (

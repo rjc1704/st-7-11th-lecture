@@ -1,4 +1,4 @@
-export const validateForm = (name, value, isLoginMode) => {
+export const validateForm = (name, value) => {
   switch (name) {
     case "id":
       if (value.length < 4 || value.length > 10) {
@@ -11,8 +11,8 @@ export const validateForm = (name, value, isLoginMode) => {
       }
       break;
     case "nickname":
-      if (!isLoginMode && (value.length < 1 || value.length > 10)) {
-        return "닉네임은 1~10글자여야 합니다.";
+      if (value.length < 2 || value.length > 10) {
+        return "닉네임은 2~10글자여야 합니다.";
       }
       break;
     default:
